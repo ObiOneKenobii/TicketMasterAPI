@@ -12,8 +12,8 @@ using TicketMasterAPI.Data;
 namespace TicketMasterAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240806101223_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240928032545_Beverage")]
+    partial class Beverage
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -156,6 +156,53 @@ namespace TicketMasterAPI.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("TicketMasterAPI.Models.Beverage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CartId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CoverImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Size")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CartId");
+
+                    b.ToTable("Beverages");
+                });
+
+            modelBuilder.Entity("TicketMasterAPI.Models.Cart", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("TicketMasterAPI.Models.Ticket", b =>
@@ -306,6 +353,18 @@ namespace TicketMasterAPI.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("TicketMasterAPI.Models.Beverage", b =>
+                {
+                    b.HasOne("TicketMasterAPI.Models.Cart", null)
+                        .WithMany("Beverages")
+                        .HasForeignKey("CartId");
+                });
+
+            modelBuilder.Entity("TicketMasterAPI.Models.Cart", b =>
+                {
+                    b.Navigation("Beverages");
                 });
 #pragma warning restore 612, 618
         }

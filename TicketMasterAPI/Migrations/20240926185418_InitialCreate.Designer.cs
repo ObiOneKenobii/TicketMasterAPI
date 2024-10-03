@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TicketMasterAPI.Data;
 
@@ -11,9 +12,11 @@ using TicketMasterAPI.Data;
 namespace TicketMasterAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240926185418_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -155,6 +158,28 @@ namespace TicketMasterAPI.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("TicketMaster.Models.Cart", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Carts");
+                });
+
             modelBuilder.Entity("TicketMasterAPI.Models.Beverage", b =>
                 {
                     b.Property<int>("Id")
@@ -186,22 +211,6 @@ namespace TicketMasterAPI.Migrations
                     b.ToTable("Beverages");
                 });
 
-            modelBuilder.Entity("TicketMasterAPI.Models.Cart", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Carts");
-                });
-
             modelBuilder.Entity("TicketMasterAPI.Models.Ticket", b =>
                 {
                     b.Property<int>("Id")
@@ -213,6 +222,9 @@ namespace TicketMasterAPI.Migrations
                     b.Property<string>("ArtistName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CartId")
+                        .HasColumnType("int");
 
                     b.Property<string>("CoverPictureUrl")
                         .HasColumnType("nvarchar(max)");
@@ -232,6 +244,8 @@ namespace TicketMasterAPI.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CartId");
 
                     b.ToTable("Tickets");
                 });
@@ -354,14 +368,23 @@ namespace TicketMasterAPI.Migrations
 
             modelBuilder.Entity("TicketMasterAPI.Models.Beverage", b =>
                 {
-                    b.HasOne("TicketMasterAPI.Models.Cart", null)
+                    b.HasOne("TicketMaster.Models.Cart", null)
                         .WithMany("Beverages")
                         .HasForeignKey("CartId");
                 });
 
-            modelBuilder.Entity("TicketMasterAPI.Models.Cart", b =>
+            modelBuilder.Entity("TicketMasterAPI.Models.Ticket", b =>
+                {
+                    b.HasOne("TicketMaster.Models.Cart", null)
+                        .WithMany("Tickets")
+                        .HasForeignKey("CartId");
+                });
+
+            modelBuilder.Entity("TicketMaster.Models.Cart", b =>
                 {
                     b.Navigation("Beverages");
+
+                    b.Navigation("Tickets");
                 });
 #pragma warning restore 612, 618
         }

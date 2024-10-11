@@ -12,15 +12,15 @@ using TicketMasterAPI.Data;
 namespace TicketMasterAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240928032545_Beverage")]
-    partial class Beverage
+    [Migration("20241011213259_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.7")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -173,7 +173,6 @@ namespace TicketMasterAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Quantity")

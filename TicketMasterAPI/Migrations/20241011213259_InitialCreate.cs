@@ -56,13 +56,29 @@ namespace TicketMasterAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Carts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tickets",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EventName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EventDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ArtistName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CoverPictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tickets", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -177,7 +193,7 @@ namespace TicketMasterAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     Size = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CoverImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -188,30 +204,6 @@ namespace TicketMasterAPI.Migrations
                     table.PrimaryKey("PK_Beverages", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Beverages_Carts_CartId",
-                        column: x => x.CartId,
-                        principalTable: "Carts",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Tickets",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    EventName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EventDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ArtistName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CoverPictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CartId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tickets", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Tickets_Carts_CartId",
                         column: x => x.CartId,
                         principalTable: "Carts",
                         principalColumn: "Id");
@@ -259,11 +251,6 @@ namespace TicketMasterAPI.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Beverages_CartId",
                 table: "Beverages",
-                column: "CartId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tickets_CartId",
-                table: "Tickets",
                 column: "CartId");
         }
 

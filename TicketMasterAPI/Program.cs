@@ -35,6 +35,21 @@ var app = builder.Build();
 //    app.UseSwaggerUI();
 //}
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        builder =>
+        {
+            builder.WithOrigins("https://your-mvc-app-url.com")
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
+
+app.UseCors();
+
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
 app.UseSwagger();
 app.UseSwaggerUI();

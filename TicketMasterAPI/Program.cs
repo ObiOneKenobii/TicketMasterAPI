@@ -40,7 +40,7 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
         builder =>
         {
-            builder.WithOrigins("https://your-mvc-app-url.com")
+            builder.WithOrigins("https://ticketbookingapp-r524.onrender.com")
                    .AllowAnyHeader()
                    .AllowAnyMethod();
         });

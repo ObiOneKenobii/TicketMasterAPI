@@ -64,6 +64,32 @@ namespace TicketMasterAPI.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
-    }
 
+        [HttpPut("transfer/{id}")]
+        public async Task<IActionResult> TransferTicket(int id, [FromBody] Ticket updatedTicket)
+        {
+            if (id != updatedTicket.Id) return BadRequest("Ticket ID mismatch.");
+
+            var ticket = await _context.Tickets.FindAsync(id);
+            if (ticket == null) return NotFound("Ticket not found.");
+
+            // Update only the SeatNumber property for the transfer
+            ticket.SeatNumber = updatedTicket.SeatNumber;
+
+            _context.Entry(ticket).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Tickets.Any(e => e.Id == id)) return NotFound("Ticket not found.");
+                else throw;
+            }
+
+            return NoContent();
+        }
+
+    }
 }
